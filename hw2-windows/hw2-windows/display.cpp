@@ -89,7 +89,9 @@ void display()
   // so assign whatever transformation matrix you intend to work with to modelview
 
   // rather than use a uniform variable for that.
- // TODO Uncomment modelview = transf;
+  transf = transf*tr*sc;
+  modelview = transf*modelview;
+
   
   for (int i = 0 ; i < numobjects ; i++) {
     object* obj = &(objects[i]); // Grabs an object struct.

@@ -112,7 +112,7 @@ mat4 Transform::lookAt(const vec3 &eye, const vec3 &center, const vec3 &up)
 mat4 Transform::perspective(float fovy, float aspect, float zNear, float zFar)
 {
     mat4 ret;
-    // TODO perspective YOUR CODE FOR HW2 HERE
+
     // New, to implement the perspective transform as well.  
 	float d = 1 / (tan((fovy *pi) / (2*180)));
 	float A = -(zFar + zNear) / (zFar - zNear);
@@ -131,8 +131,8 @@ mat4 Transform::perspective(float fovy, float aspect, float zNear, float zFar)
 mat4 Transform::scale(const float &sx, const float &sy, const float &sz) 
 {
     mat4 ret;
-    // TODO scale YOUR CODE FOR HW2 HERE
-    // Implement scaling 
+
+	// Implement scaling 
 	ret[0][0] = sx;
 	ret[1][1] = sy;
 	ret[2][2] = sz;
@@ -144,7 +144,6 @@ mat4 Transform::translate(const float &tx, const float &ty, const float &tz)
 {
     mat4 ret;
 
-	// TODO translate YOUR CODE FOR HW2 HERE
     // Implement translation 
 	ret[3][0] = tx;
 	ret[3][1] = ty;
