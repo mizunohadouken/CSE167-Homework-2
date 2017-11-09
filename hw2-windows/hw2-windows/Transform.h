@@ -11,6 +11,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+//TODO remove, test only
+#include <iostream>
+
+
 // glm provides vector, matrix classes like glsl
 // Typedefs to make code more readable 
 
