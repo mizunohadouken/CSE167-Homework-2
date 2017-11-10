@@ -63,11 +63,27 @@ void display()
   if (numused) {
     glUniform1i(enablelighting,true);
 
+	// TODO - Verify this CodePass light and color vector arrays to shader
     // YOUR CODE FOR HW 2 HERE.  
     // You need to pass the light positions and colors to the shader. 
     // glUniform4fv() and similar functions will be useful. See FAQ for help with these functions.
     // The lightransf[] array in variables.h and transformvec() might also be useful here.
-    // Remember that light positions must be transformed by modelview.  
+    // Remember that light positions must be transformed by modelview.
+
+	GLfloat in_temp_light[4], out_mv_light[4], temp_color[4]; // create temp arrays to store 4vectors from lightposn and lightcolor arrays
+
+	for (int i = 0; i < numused; i++)
+	{
+		for (int j = 0; j < 4; j++)
+		{
+			in_temp_light[j] = lightposn[(i * 4) + j];
+			temp_color[j] = lightcolor[(i * 4) + j];
+		}
+		transformvec(in_temp_light, out_mv_light);
+		glUniform4fv(lightpos, i, out_mv_light);
+		glUniform4fv(lightcol, i, temp_color);
+	}
+
 
   } else {
     glUniform1i(enablelighting,false); 
@@ -89,17 +105,25 @@ void display()
   // so assign whatever transformation matrix you intend to work with to modelview
 
   // rather than use a uniform variable for that.
-  transf = transf*tr*sc;
-  modelview = transf*modelview;
+  transf = transf*tr*sc;  // TODO Check these values
+  modelview = modelview*transf;
 
   
   for (int i = 0 ; i < numobjects ; i++) {
     object* obj = &(objects[i]); // Grabs an object struct.
 
+	// TODO verify this is correct
     // YOUR CODE FOR HW 2 HERE. 
     // Set up the object transformations 
     // And pass in the appropriate material properties
     // Again glUniform() related functions will be useful
+
+	glUniform4fv(ambientcol, 1, obj->ambient); // TODO add each material property
+	glUniform4fv(diffusecol, 1, obj->diffuse);
+	glUniform4fv(specularcol, 1, obj->specular);
+	glUniform4fv(emissioncol, 1, obj->emission);
+	glUniform1f(shininesscol, obj->shininess);
+	
 
     // Actually draw the object
     // We provide the actual drawing functions for you.  

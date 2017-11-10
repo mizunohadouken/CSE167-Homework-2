@@ -100,12 +100,21 @@ void readfile(const char* filename)
                         validinput = readvals(s, 8, values); // Position/color for lts.
                         if (validinput) {
 
+							// TODO verify this lighting input
                             // YOUR CODE FOR HW 2 HERE. 
                             // Note that values[0...7] shows the read in values 
                             // Make use of lightposn[] and lightcolor[] arrays in variables.h
                             // Those arrays can then be used in display too.  
-
-                            ++numused; 
+							
+							for (int i = 0; i < 4; i++)
+							{
+								lightposn[(numused*4) + i] = values[i];
+							}
+							for (int i = 0; i < 4; i++)
+							{
+								lightcolor[(numused*4) + i] = values[i+4];
+							}
+							++numused; 
                         }
                     }
                 }
@@ -158,6 +167,8 @@ void readfile(const char* filename)
                     validinput = readvals(s,10,values); // 10 values eye cen up fov
                     if (validinput) {
 
+
+						// TODO Camera input for readfile
                         // YOUR CODE FOR HW 2 HERE
                         // Use all of values[0...9]
                         // You may need to use the upvector fn in Transform.cpp

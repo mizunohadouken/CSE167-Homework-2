@@ -201,8 +201,7 @@ int main(int argc, char* argv[]) {
 
   init();
   
-// TODO Uncomment readfile(argv[1]) ;
-  readfile("hw1.txt");
+  readfile(argv[1]) ;
   glutDisplayFunc(display);
   glutSpecialFunc(specialKey);
   glutKeyboardFunc(keyboard);

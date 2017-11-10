@@ -41,9 +41,47 @@ void main (void)
 
         // YOUR CODE FOR HW 2 HERE
         // A key part is implementation of the fragment shader
+	
+		const vec3 eyepos = vec3(0,0,0) ; 
+        vec3 mypos = myvertex.xyz / myvertex.w ; // Dehomogenize current location 
+        vec3 eyedirn = normalize(eyepos - mypos) ; 
+	
+		// Compute normal, needed for shading. 
+        vec3 normal = normalize(mynormal) ; 
 
+		// variables to store temps
+		float light_i_nDotL, light_i_nDotH; 
+		vec3 dehomo_light_i_pos, light_i_direction, light_i_halfvec;
+		vec4 light_i_position, light_i_color, lambert, phong;
+		vec4 phong_lambert_sum = vec4(0,0,0,0);
+		
+		/////////////////////////////////
+		// Loop to compute sum of lighting components
+		for (int i = 0; i < numLights; i++)
+		{			
+			light_i_position = lightposn[i];
+			light_i_color = lightcolor[i];
+		
+			dehomo_light_i_pos = light_i_position.xyz / light_i_position.w;
+			light_i_direction = normalize (dehomo_light_i_pos - mypos);
+			light_i_halfvec = normalize (light_i_direction + eyedirn) ; 
+			
+			// Lambert component
+			light_i_nDotL = dot(normal, light_i_direction); 
+			lambert = light_i_color* diffuse * max (light_i_nDotL, 0.0);
+
+			// Phong component
+			light_i_nDotH = dot(normal, light_i_halfvec);		
+			phong = light_i_color* specular  * pow(max(light_i_nDotH, 0.0), shininess);
+			
+			phong_lambert_sum = phong_lambert_sum + phong + lambert;					
+		}
+		
+	
         // Color all pixels black for now, remove this in your implementation!
-        finalcolor = vec4(0.0f, 0.0f, 0.0f, 1.0f); 
+	// finalcolor = vec4(0.0f, 0.0f, 0.0f, 1.0f); 
+		finalcolor = ambient + emission + phong_lambert_sum;
+
 
         fragColor = finalcolor; 
     } else {

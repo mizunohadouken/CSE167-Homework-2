@@ -1,3 +1,2 @@
-﻿  Transform.cpp
-c:\users\andrew\desktop\courses\cse167\homework 2\hw2-windows\hw2-windows\transform.cpp(51): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+﻿  display.cpp
   hw2-windows.vcxproj -> C:\Users\Andrew\Desktop\Courses\CSE167\Homework 2\hw2-windows\Debug\hw2-windows.exe
