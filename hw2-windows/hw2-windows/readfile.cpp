@@ -166,15 +166,27 @@ void readfile(const char* filename)
                 } else if (cmd == "camera") {
                     validinput = readvals(s,10,values); // 10 values eye cen up fov
                     if (validinput) {
-
-
 						// TODO Camera input for readfile
                         // YOUR CODE FOR HW 2 HERE
                         // Use all of values[0...9]
                         // You may need to use the upvector fn in Transform.cpp
                         // to set up correctly. 
                         // Set eyeinit upinit center fovy in variables.h 
-
+						eyeinit[0] = values[0];
+						eyeinit[1] = values[1];
+						eyeinit[2] = values[2];
+						
+						center[0] = values[3];
+						center[1] = values[4];
+						center[2] = values[5];
+						
+						upinit[0] = values[6];
+						upinit[1] = values[7];
+						upinit[2] = values[8];
+						upinit = Transform::upvector(upinit, eyeinit);
+												
+						fovy = values[9];
+						// end code
                     }
                 }
 
@@ -223,6 +235,11 @@ void readfile(const char* filename)
                         // Think about how the transformation stack is affected
                         // You might want to use helper functions on top of file. 
                         // Also keep in mind what order your matrix is!
+						mat4 translate_matrix =  Transform::translate(values[0], values[1], values[2]);
+						rightmultiply(translate_matrix, transfstack);
+
+
+						// end my code
 
                     }
                 }
@@ -234,6 +251,8 @@ void readfile(const char* filename)
                         // Think about how the transformation stack is affected
                         // You might want to use helper functions on top of file.  
                         // Also keep in mind what order your matrix is!
+						mat4 scale_matrix = Transform::scale(values[0], values[1], values[2]);
+						rightmultiply(scale_matrix, transfstack);
 
                     }
                 }
@@ -247,7 +266,10 @@ void readfile(const char* filename)
                         // See how the stack is affected, as above.  
                         // Note that rotate returns a mat3. 
                         // Also keep in mind what order your matrix is!
-
+						vec3 temp_vec = vec3(values[0], values[1], values[2]);						
+						mat4 rotation_mat = mat4(Transform::rotate(values[3], temp_vec));
+						
+						rightmultiply(rotation_mat, transfstack);
                     }
                 }
 

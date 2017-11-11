@@ -49,15 +49,16 @@ void print4x4Matrix(mat4 mPrintMe)
 mat3 Transform::rotate(const float degrees, const vec3& axis) 
 {
 	float radians = degrees*pi / 180.0;
+	vec3 axis_normal = normalize(axis);
 
 	glm::mat3 mRotation(0); // rotation matrix to return
 	glm::mat3 mIdentity(1.0);
-	glm::mat3 mAxisxAxisTranspose(axis.x * axis.x, axis.x * axis.y, axis.x * axis.z,
-							axis.x * axis.y, axis.y * axis.y, axis.y * axis.z,
-							axis.x * axis.z, axis.y * axis.z, axis.z * axis.z);
-	glm::mat3 mAxisDualMatrix(0,	 axis.z, -axis.y,
-							-axis.z,	  0, axis.x,
-							axis.y,	 -axis.x, 0);
+	glm::mat3 mAxisxAxisTranspose(axis_normal.x * axis_normal.x, axis_normal.x * axis_normal.y, axis_normal.x * axis_normal.z,
+							axis_normal.x * axis_normal.y, axis_normal.y * axis_normal.y, axis_normal.y * axis_normal.z,
+							axis_normal.x * axis_normal.z, axis_normal.y * axis_normal.z, axis_normal.z * axis_normal.z);
+	glm::mat3 mAxisDualMatrix(0,	 axis_normal.z, -axis_normal.y,
+							-axis_normal.z,	  0, axis_normal.x,
+							axis_normal.y,	 -axis_normal.x, 0);
 
 	// Calculate rotation matrix
 	mRotation = (mIdentity * cos(radians))
@@ -87,6 +88,7 @@ void Transform::up(float degrees, vec3& eye, vec3& up)
 mat4 Transform::lookAt(const vec3 &eye, const vec3 &center, const vec3 &up) 
 {
 	// Create coordinate frame for camera
+// TODO need?	vec3 w = normalize(eye - center);
 	vec3 w = normalize(eye);
 	vec3 u = normalize(cross(up, w));
 	vec3 v = cross(w, u);
@@ -130,7 +132,7 @@ mat4 Transform::perspective(float fovy, float aspect, float zNear, float zFar)
 
 mat4 Transform::scale(const float &sx, const float &sy, const float &sz) 
 {
-    mat4 ret;
+    mat4 ret = mat4(1);
 
 	// Implement scaling 
 	ret[0][0] = sx;
@@ -142,7 +144,7 @@ mat4 Transform::scale(const float &sx, const float &sy, const float &sz)
 
 mat4 Transform::translate(const float &tx, const float &ty, const float &tz) 
 {
-    mat4 ret;
+    mat4 ret = mat4(1);
 
     // Implement translation 
 	ret[3][0] = tx;

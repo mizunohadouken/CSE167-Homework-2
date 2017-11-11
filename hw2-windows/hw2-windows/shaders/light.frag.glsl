@@ -34,6 +34,21 @@ uniform vec4 specular;
 uniform vec4 emission; 
 uniform float shininess; 
 
+
+
+vec4 ComputeLight (const in vec3 direction, const in vec4 lightcolor, const in vec3 normal, const in vec3 halfvec, const in vec4 mydiffuse, const in vec4 myspecular, const in float myshininess)
+{
+        float nDotL = dot(normal, direction)  ;         
+        vec4 lambert = mydiffuse * lightcolor * max (nDotL, 0.0) ;  
+
+        float nDotH = dot(normal, halfvec) ; 
+        vec4 phong = myspecular * lightcolor * pow (max(nDotH, 0.0), myshininess) ; 
+
+        vec4 retval = lambert + phong ; 
+        return retval ;            
+}      
+
+
 void main (void) 
 {       
     if (enablelighting) {       
@@ -43,38 +58,46 @@ void main (void)
         // A key part is implementation of the fragment shader
 	
 		const vec3 eyepos = vec3(0,0,0) ; 
-        vec3 mypos = myvertex.xyz / myvertex.w ; // Dehomogenize current location 
+
+		vec4 mv_pos = modelview * myvertex;
+        vec3 mypos = mv_pos.xyz / mv_pos.w ; // Dehomogenize current location 
         vec3 eyedirn = normalize(eyepos - mypos) ; 
 	
 		// Compute normal, needed for shading. 
-        vec3 normal = normalize(mynormal) ; 
+		vec3 mv_normal = mat3(transpose(inverse(modelview))) * mynormal;
+		vec3 normal = normalize(mv_normal) ; 
 
 		// variables to store temps
 		float light_i_nDotL, light_i_nDotH; 
-		vec3 dehomo_light_i_pos, light_i_direction, light_i_halfvec;
+		vec3 dehomo_light_i_pos, light_i_direction, light_i_halfvec, light_input_dir;
 		vec4 light_i_position, light_i_color, lambert, phong;
 		vec4 phong_lambert_sum = vec4(0,0,0,0);
 		
 		/////////////////////////////////
 		// Loop to compute sum of lighting components
 		for (int i = 0; i < numLights; i++)
-		{			
+		{	
 			light_i_position = lightposn[i];
 			light_i_color = lightcolor[i];
-		
-			dehomo_light_i_pos = light_i_position.xyz / light_i_position.w;
-			light_i_direction = normalize (dehomo_light_i_pos - mypos);
-			light_i_halfvec = normalize (light_i_direction + eyedirn) ; 
 			
-			// Lambert component
-			light_i_nDotL = dot(normal, light_i_direction); 
-			lambert = light_i_color* diffuse * max (light_i_nDotL, 0.0);
-
-			// Phong component
-			light_i_nDotH = dot(normal, light_i_halfvec);		
-			phong = light_i_color* specular  * pow(max(light_i_nDotH, 0.0), shininess);
+			// for directional light
+			if (light_i_position.w == 0)
+			{
+				light_input_dir = light_i_position.xyz;
+			}
+			// for point light
+			else
+			{		
+				dehomo_light_i_pos = light_i_position.xyz / light_i_position.w;
+				light_input_dir = normalize (dehomo_light_i_pos - mypos);
+			}
+					
+			light_i_halfvec = normalize (light_input_dir + eyedirn); 
 			
-			phong_lambert_sum = phong_lambert_sum + phong + lambert;					
+			phong_lambert_sum = phong_lambert_sum + 
+									ComputeLight(light_input_dir, light_i_color,
+									normal, light_i_halfvec, diffuse,
+									specular, shininess);					
 		}
 		
 	
