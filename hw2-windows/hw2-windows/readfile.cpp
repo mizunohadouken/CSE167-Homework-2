@@ -183,6 +183,7 @@ void readfile(const char* filename)
 						upinit[0] = values[6];
 						upinit[1] = values[7];
 						upinit[2] = values[8];
+
 						upinit = Transform::upvector(upinit, eyeinit);
 												
 						fovy = values[9];
@@ -266,7 +267,8 @@ void readfile(const char* filename)
                         // See how the stack is affected, as above.  
                         // Note that rotate returns a mat3. 
                         // Also keep in mind what order your matrix is!
-						vec3 temp_vec = vec3(values[0], values[1], values[2]);						
+						vec3 temp_vec = vec3(values[0], values[1], values[2]);		
+		// TODO is this needed?		temp_vec = normalize(temp_vec);
 						mat4 rotation_mat = mat4(Transform::rotate(values[3], temp_vec));
 						
 						rightmultiply(rotation_mat, transfstack);

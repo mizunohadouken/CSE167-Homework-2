@@ -109,9 +109,9 @@ void display()
   // The object draw functions will need to further modify the top of the stack,
   // so assign whatever transformation matrix you intend to work with to modelview
   // rather than use a uniform variable for that.
-  transf = transf*tr*sc;  // TODO Check these values
-  modelview = modelview * transf;
-  glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &(modelview)[0][0]); // TODO is this needed?
+  transf = modelview*tr*sc;  // TODO Check these values
+//  modelview = modelview * transf;
+  glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &(transf)[0][0]); // TODO is this needed?
   // end my code
 
   
@@ -123,16 +123,14 @@ void display()
     // Set up the object transformations 
     // And pass in the appropriate material properties
     // Again glUniform() related functions will be useful
-	modelview = modelview * obj->transform;
-	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &(modelview)[0][0]);
+	modelview = transf * obj->transform;
+//	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &(transf)[0][0]);
 
 	glUniform4fv(ambientcol, 1, obj->ambient); // TODO add each material property
 	glUniform4fv(diffusecol, 1, obj->diffuse);
 	glUniform4fv(specularcol, 1, obj->specular);
 	glUniform4fv(emissioncol, 1, obj->emission);
 	glUniform1f(shininesscol, obj->shininess);
-//	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &(modelview)[0][0]);
-
 	// end my code
 	
 
