@@ -26,6 +26,30 @@ using namespace std;
 // Provided for your convenience.  Use is optional.  
 // Some of you may want to use the more modern routines in readfile.cpp 
 // that can also be used.  
+
+// TODO remove test matrix
+void print4x4Matrix(mat4 mPrintMe)
+{
+	std::cout << mPrintMe[0][0] << " ";
+	std::cout << mPrintMe[1][0] << " ";
+	std::cout << mPrintMe[2][0] << " ";
+	std::cout << mPrintMe[3][0] << "\n";
+	std::cout << mPrintMe[0][1] << " ";
+	std::cout << mPrintMe[1][1] << " ";
+	std::cout << mPrintMe[2][1] << " ";
+	std::cout << mPrintMe[3][1] << "\n";
+	std::cout << mPrintMe[0][2] << " ";
+	std::cout << mPrintMe[1][2] << " ";
+	std::cout << mPrintMe[2][2] << " ";
+	std::cout << mPrintMe[3][2] << "\n";
+	std::cout << mPrintMe[0][3] << " ";
+	std::cout << mPrintMe[1][3] << " ";
+	std::cout << mPrintMe[2][3] << " ";
+	std::cout << mPrintMe[3][3] << "\n\n";
+	return;
+}
+
+
 void transformvec (const GLfloat input[4], GLfloat output[4]) 
 {
 	glm::vec4 inputvec(input[0], input[1], input[2], input[3]);
@@ -109,10 +133,24 @@ void display()
   // The object draw functions will need to further modify the top of the stack,
   // so assign whatever transformation matrix you intend to work with to modelview
   // rather than use a uniform variable for that.
-  transf = modelview*tr*sc;  // TODO Check these values
-//  modelview = modelview * transf;
-  glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &(transf)[0][0]); // TODO is this needed?
-  // end my code
+
+  int test = 1;// TODO remove this test case variable, toggle between 1/0
+
+  if (test == 1)
+  {
+	  transf = modelview*tr*sc;  // TODO Check these values
+	  print4x4Matrix(transf);
+	  glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &(transf)[0][0]); // TODO is this needed?
+  }
+  else if (test == 0)
+  {
+	  transf = tr*sc;  // TODO Check these values
+	  modelview = modelview * transf;
+	  print4x4Matrix(modelview);
+	  glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &(modelview)[0][0]); // TODO is this needed?
+  }
+
+	// end my code
 
   
   for (int i = 0 ; i < numobjects ; i++) {
@@ -123,8 +161,23 @@ void display()
     // Set up the object transformations 
     // And pass in the appropriate material properties
     // Again glUniform() related functions will be useful
-	modelview = transf * obj->transform;
+
+	if (test == 1)
+	{
+		print4x4Matrix(modelview);
+		print4x4Matrix(obj->transform);
+		modelview = transf * obj->transform;
+		print4x4Matrix(modelview);
+	}
+	else if (test ==0)
+	{
+		print4x4Matrix(modelview);
+		print4x4Matrix(obj->transform);
+		modelview = modelview * obj->transform;
+//		print4x4Matrix(modelview);
+	}
 //	glUniformMatrix4fv(modelviewPos, 1, GL_FALSE, &(transf)[0][0]);
+
 
 	glUniform4fv(ambientcol, 1, obj->ambient); // TODO add each material property
 	glUniform4fv(diffusecol, 1, obj->diffuse);

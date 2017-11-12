@@ -22,28 +22,6 @@ void print3x3Matrix(mat3 mPrintMe)
 	return;
 }
 
-// TODO remove test matrix
-void print4x4Matrix(mat4 mPrintMe)
-{
-	std::cout << mPrintMe[0][0] << " ";
-	std::cout << mPrintMe[1][0] << " ";
-	std::cout << mPrintMe[2][0] << " ";
-	std::cout << mPrintMe[3][0] << "\n";
-	std::cout << mPrintMe[0][1] << " ";
-	std::cout << mPrintMe[1][1] << " ";
-	std::cout << mPrintMe[2][1] << " ";
-	std::cout << mPrintMe[3][1] << "\n";
-	std::cout << mPrintMe[0][2] << " ";
-	std::cout << mPrintMe[1][2] << " ";
-	std::cout << mPrintMe[2][2] << " ";
-	std::cout << mPrintMe[3][2] << "\n";
-	std::cout << mPrintMe[0][3] << " ";
-	std::cout << mPrintMe[1][3] << " ";
-	std::cout << mPrintMe[2][3] << " ";
-	std::cout << mPrintMe[3][3] << "\n";
-	return;
-}
-
 
 // Helper rotation function.  Please implement this.  
 mat3 Transform::rotate(const float degrees, const vec3& axis) 

@@ -83,7 +83,7 @@ void main (void)
 			// for directional light
 			if (light_i_position.w == 0)
 			{
-				light_input_dir = light_i_position.xyz;
+				light_input_dir = normalize(light_i_position.xyz);
 			}
 			// for point light
 			else
